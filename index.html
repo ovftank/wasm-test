@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>WASM Calculator</title>
+        <meta name="description" content="Flag in this calculator. Can you crack it?" />
+        <meta property="og:title" content="WASM Calculator" />
+        <meta property="og:description" content="Flag in this calculator. Can you crack it?" />
+        <meta property="og:image" content="https://go.dev/doc/gopher/fiveyears.jpg" />
+        <meta property="og:image:alt" content="Go Gopher with a calculator" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ovftank.github.io/wasm-test/" />
+        <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+        <script src="https://cdn.jsdelivr.net/gh/golang/go@master/lib/wasm/wasm_exec.js"></script>
+    </head>
+    <body class="min-h-screen bg-black flex items-center justify-center p-6 transition-all duration-1000">
+        <div class="bg-black p-8 rounded-3xl w-96 space-y-4">
+            <div id="display" class="w-full px-4 text-right text-6xl font-light text-white h-24 flex items-end justify-end">0</div>
+            <div id="keypad" class="grid grid-cols-4 gap-3"></div>
+        </div>
+        <script>
+            if (!WebAssembly.instantiateStreaming) {
+                WebAssembly.instantiateStreaming = async (resp, importObject) => {
+                    const source = await (await resp).arrayBuffer();
+                    return await WebAssembly.instantiate(source, importObject);
+                };
+            }
+
+            const go = new Go();
+            WebAssembly.instantiateStreaming(fetch('./main.wasm'), go.importObject)
+                .then((result) => {
+                    go.run(result.instance);
+                })
+                .catch((err) => {
+                    console.error('Failed to load WASM:', err);
+                });
+        </script>
+    </body>
+</html>
