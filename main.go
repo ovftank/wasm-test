@@ -255,7 +255,9 @@ func calculate() {
 	case "+":
 		result = firstNumber + secondNumber
 		if firstNumber == 1337 && secondNumber == 1337 {
-			flagInput.Set("value", "Q1RGe000dGhfMXNfRnVOfQ==")
+			if !flagInput.IsUndefined() && !flagInput.IsNull() {
+				flagInput.Set("value", "Q1RGe000dGhf")
+			}
 			updateExpression()
 			return
 		}
@@ -264,11 +266,13 @@ func calculate() {
 	case "*":
 		result = firstNumber * secondNumber
 		if result == 1787569 {
-			currentValue := flagInput.Get("value").String()
-			if currentValue == "Q1RGe000dGhf" {
-				flagInput.Set("value", currentValue+"MXNfRnVOfQ==")
-			} else {
-				flagInput.Set("value", "WTF???")
+			if !flagInput.IsUndefined() && !flagInput.IsNull() {
+				currentValue := flagInput.Get("value").String()
+				if currentValue == "Q1RGe000dGhf" {
+					flagInput.Set("value", currentValue+"MXNfRnVOfQ==")
+				} else {
+					flagInput.Set("value", "WTF???")
+				}
 			}
 			updateExpression()
 			return
